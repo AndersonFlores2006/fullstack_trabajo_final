@@ -1,0 +1,98 @@
+/* Styles for ProductList table in ProductManagement */
+
+.products-table {
+    width: 100%;
+    border-collapse: collapse; /* Remove double borders */
+    margin-top: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Keep shadow subtle, maybe adjust in dark? */
+    background-color: var(--card-background); /* Use variable */
+    border: 1px solid var(--border-color); /* Add border to table itself */
+    border-radius: 4px; /* Optional: Rounded corners for the table */
+    overflow: hidden; /* Ensures border-radius clips content */
+}
+
+.products-table th,
+.products-table td {
+    /* border: 1px solid var(--border-color); */ /* Remove individual cell borders */
+    border-bottom: 1px solid var(--border-color); /* Use bottom borders only */
+    padding: 12px 15px; /* More padding */
+    text-align: left;
+    vertical-align: middle; /* Align content vertically */
+}
+
+.products-table th {
+    background-color: var(--table-header-bg); /* Use variable */
+    font-weight: bold;
+    color: var(--text-color); /* Use variable */
+    border-bottom-width: 2px; /* Thicker border below header */
+}
+
+/* Remove border from last row */
+.product-list-body tr:last-child td {
+    border-bottom: none;
+}
+
+.product-list-body tr:nth-child(even) {
+    background-color: var(--table-row-even-bg); /* Use variable */
+}
+
+.product-list-body tr:hover {
+    background-color: var(--table-row-hover-bg); /* Use variable */
+}
+
+.product-info {
+    /* Allow name and description to take up space */
+}
+
+.product-description {
+    display: block; /* Make description appear on new line */
+    font-size: 0.9em;
+    color: var(--text-muted); /* Use variable */
+    margin-top: 4px;
+}
+
+.product-price,
+.product-stock {
+    text-align: right; /* Align numbers to the right */
+    white-space: nowrap; /* Prevent price/stock wrapping */
+    width: 10%; /* Allocate some width */
+    color: var(--text-color); /* Ensure text color uses variable */
+}
+
+.product-actions {
+    text-align: center; /* Center buttons */
+    white-space: nowrap;
+    width: 15%; /* Allocate width for buttons */
+}
+
+.product-actions .button-edit,
+.product-actions .button-delete {
+    padding: 5px 10px;
+    margin-left: 8px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.product-actions .button-edit {
+    background-color: var(--primary-color);
+    color: var(--text-light); /* Assuming light text on primary */
+    border-color: var(--primary-color);
+}
+
+.product-actions .button-edit:hover {
+    background-color: var(--button-hover-bg);
+    border-color: var(--button-hover-bg);
+}
+
+.product-actions .button-delete {
+    background-color: var(--danger-color);
+    color: var(--text-light); /* Assuming light text on danger */
+    border-color: var(--danger-color);
+}
+
+.product-actions .button-delete:hover {
+    background-color: var(--danger-hover-bg);
+    border-color: var(--danger-hover-bg);
+}

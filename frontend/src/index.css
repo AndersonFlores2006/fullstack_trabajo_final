@@ -1,0 +1,158 @@
+/* index.css - Base styles */
+:root {
+  /* Light Mode Variables (Default) */
+  color-scheme: light;
+  --primary-color: #4a90e2;
+  --secondary-color: #f5f5f5;
+  --text-color: #333;
+  --text-light: #fff;
+  --text-muted: #6c757d;
+  --border-color: #ddd;
+  --card-background: #fff;
+  --table-header-bg: #f8f9fa;
+  --table-row-even-bg: #fdfdfe;
+  --table-row-hover-bg: #f1f1f1;
+  --header-background: #2c3e50;
+  --button-hover-bg: #3a7bc8;
+  --danger-color: #dc3545;
+  --danger-hover-bg: #c82333;
+  --cancel-bg: #f5f5f5; /* Added for cancel/secondary buttons */
+  --cancel-text: #555;   /* Added for cancel/secondary buttons */
+  --cancel-hover-bg: #eee; /* Added for cancel/secondary buttons */
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+  font-family: var(--font-family-base);
+  line-height: 1.6;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark Mode Variables - Applied via media query */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --primary-color: #5fa8ff;
+    --secondary-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    /* --text-light remains #fff */
+    --text-muted: #a0a0a0;
+    --border-color: #444;
+    --card-background: #2a2a2a;
+    --table-header-bg: #333;
+    --table-row-even-bg: #303030;
+    --table-row-hover-bg: #3f3f3f;
+    --header-background: #1e2a38;
+    --button-hover-bg: #79b8ff;
+    --danger-color: #ff6b6b;
+    --danger-hover-bg: #ff4f4f;
+    --cancel-bg: #404040; /* Dark background for cancel */
+    --cancel-text: var(--text-color); /* Use standard dark text */
+    --cancel-hover-bg: #505050; /* Darker hover for cancel */
+  }
+}
+
+/* Apply theme classes explicitly for manual toggle override */
+body.light {
+  color-scheme: light;
+  /* Explicitly set light variables (mostly redundant but safe) */
+  --primary-color: #4a90e2;
+  --secondary-color: #f5f5f5;
+  --text-color: #333;
+  --text-light: #fff;
+  --text-muted: #6c757d;
+  --border-color: #ddd;
+  --card-background: #fff;
+  --table-header-bg: #f8f9fa;
+  --table-row-even-bg: #fdfdfe;
+  --table-row-hover-bg: #f1f1f1;
+  --header-background: #2c3e50;
+  --button-hover-bg: #3a7bc8;
+  --danger-color: #dc3545;
+  --danger-hover-bg: #c82333;
+  --cancel-bg: #f5f5f5;
+  --cancel-text: #555;
+  --cancel-hover-bg: #eee;
+}
+
+body.dark {
+  color-scheme: dark;
+  /* Copy dark variables here to ensure .dark class takes precedence */
+  --primary-color: #5fa8ff;
+  --secondary-color: #1a1a1a;
+  --text-color: #e0e0e0;
+  /* --text-light remains #fff */
+  --text-muted: #a0a0a0;
+  --border-color: #444;
+  --card-background: #2a2a2a;
+  --table-header-bg: #333;
+  --table-row-even-bg: #303030;
+  --table-row-hover-bg: #3f3f3f;
+  --header-background: #1e2a38;
+  --button-hover-bg: #79b8ff;
+  --danger-color: #ff6b6b;
+  --danger-hover-bg: #ff4f4f;
+  --cancel-bg: #404040;
+  --cancel-text: var(--text-color);
+  --cancel-hover-bg: #505050;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--button-hover-bg);
+  text-decoration: underline;
+}
+
+/* Remove or override default h1/button styles if they conflict with App.css */
+h1 {
+    font-size: 2.5rem; /* Adjust base h1 if needed */
+    line-height: 1.2;
+    margin-bottom: 1rem; /* Add some default margin */
+}
+
+/* Default button styles are now mostly handled in App.css */
+/* Ensure default button styling is minimal or removed */
+button {
+  font-family: inherit; /* Inherit base font */
+  /* Remove conflicting default styles */
+  /* border-radius: 8px; */
+  /* border: 1px solid transparent; */
+  /* padding: 0.6em 1.2em; */
+  /* font-size: 1em; */
+  /* background-color: #1a1a1a; */
+  /* cursor: pointer; */
+  /* transition: border-color 0.25s; */
+}
+/* button:hover { border-color: #646cff; } */
+/* button:focus, button:focus-visible { outline: 4px auto -webkit-focus-ring-color; } */
