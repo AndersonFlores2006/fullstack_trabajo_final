@@ -36,8 +36,19 @@
     background-color: var(--table-row-even-bg); /* Use variable */
 }
 
+.product-list-body tr {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
 .product-list-body tr:hover {
-    background-color: var(--table-row-hover-bg); /* Use variable */
+    background-color: var(--table-row-hover-bg);
+    transform: translateX(4px);
+    box-shadow: -4px 0 0 var(--primary-color);
+}
+
+.product-list-body tr:active {
+    transform: translateX(2px);
 }
 
 .product-info {
@@ -73,6 +84,8 @@
     border: 1px solid transparent;
     border-radius: 4px;
     font-size: 0.9em;
+    transition: all 0.2s ease;
+    opacity: 0.9;
 }
 
 .product-actions .button-edit {
@@ -81,18 +94,19 @@
     border-color: var(--primary-color);
 }
 
-.product-actions .button-edit:hover {
-    background-color: var(--button-hover-bg);
-    border-color: var(--button-hover-bg);
+.product-actions .button-edit:hover,
+.product-actions .button-delete:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+.product-actions .button-edit:active,
+.product-actions .button-delete:active {
+    transform: translateY(0);
 }
 
 .product-actions .button-delete {
     background-color: var(--danger-color);
     color: var(--text-light); /* Assuming light text on danger */
     border-color: var(--danger-color);
-}
-
-.product-actions .button-delete:hover {
-    background-color: var(--danger-hover-bg);
-    border-color: var(--danger-hover-bg);
 }

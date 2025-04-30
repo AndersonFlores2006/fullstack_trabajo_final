@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import CustomerList from './CustomerList';
 import CustomerForm from './CustomerForm';
+import Swal from 'sweetalert2';
 
 const API_URL = 'http://localhost:5000/api';
 
@@ -52,16 +53,42 @@ function CustomerManagement() {
     };
 
     const handleDeleteCustomer = async (customerId) => {
-        if (!window.confirm("¿Está seguro que desea eliminar este cliente?")) {
-            return;
-        }
-        try {
-            await axios.delete(`${API_URL}/customers/${customerId}`);
-            fetchCustomers(); // Refresh list
-        } catch (err) {
-            console.error("Error al eliminar cliente:", err);
-            setError(err.response?.data?.message || 'Error al eliminar el cliente.');
-        }
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¡No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, ¡eliminar!',
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    setLoading(true);
+                    await axios.delete(`${API_URL}/customers/${customerId}`);
+                    fetchCustomers(); // Refresh list
+                    Swal.fire({
+                        title: '¡Eliminado!',
+                        text: 'El cliente ha sido eliminado.',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } catch (err) {
+                    console.error("Error al eliminar cliente:", err);
+                    const errorMsg = err.response?.data?.message || 'Error al eliminar el cliente.';
+                    setError(errorMsg);
+                    Swal.fire({
+                        title: 'Error',
+                        text: errorMsg,
+                        icon: 'error'
+                    });
+                } finally {
+                    setLoading(false);
+                }
+            }
+        });
     };
 
     return (

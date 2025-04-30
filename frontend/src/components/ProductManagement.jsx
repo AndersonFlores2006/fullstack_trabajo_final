@@ -114,43 +114,70 @@ function ProductManagement() {
     };
 
     return (
-        <div>
-            <h2>Gestión de Productos</h2>
+        <div className="card">
+            <div className="product-header">
+                <h2>Gestión de Productos</h2>
+                {!showForm && (
+                    <button onClick={handleShowAddForm} className="add-product-button">
+                        + Añadir Nuevo Producto
+                    </button>
+                )}
+            </div>
 
-            {error && <p className="error-message" style={{ color: 'red' }}>Error: {error}</p>}
+            {error && <div className="error-message">{error}</div>}
 
             {showForm ? (
                 <ProductForm
                     productToEdit={editingProduct}
-                    allProducts={products}
                     onFormSubmit={handleFormSubmit}
                     onCancel={handleCancelForm}
                 />
             ) : (
                 <>
-                    <button onClick={handleShowAddForm} className="add-button" style={{ marginBottom: '1rem' }}>
-                        Añadir Nuevo Producto
-                    </button>
-
                     {loading ? (
-                        <p>Cargando productos...</p>
+                        <div className="loading">Cargando productos...</div>
                     ) : products.length === 0 ? (
-                        <p>No se encontraron productos.</p> // Show message when no products and not loading
+                        <p>No se encontraron productos.</p>
                     ) : (
-                        <table className="products-table">
+                        <table>
                             <thead>
                                 <tr>
-                                    <th>Nombre / Descripción</th>
-                                    <th>Precio</th>
-                                    <th>Stock</th>
-                                    <th>Acciones</th>
+                                    <th className="name-column">Nombre / Descripción</th>
+                                    <th className="price-column">Precio</th>
+                                    <th className="stock-column">Stock</th>
+                                    <th className="actions-column">Acciones</th>
                                 </tr>
                             </thead>
-                            <ProductList
-                                products={products}
-                                onEdit={handleShowEditForm}
-                                onDelete={handleDeleteProduct}
-                            />
+                            <tbody>
+                                {products.map(product => (
+                                    <tr key={product.id}>
+                                        <td>
+                                            <div>{product.name}</div>
+                                            {product.description && (
+                                                <div className="product-description">{product.description}</div>
+                                            )}
+                                        </td>
+                                        <td className="price-column">S/.{product.price.toFixed(2)}</td>
+                                        <td className="stock-column">{product.stock}</td>
+                                        <td>
+                                            <div className="product-actions">
+                                                <button
+                                                    onClick={() => handleShowEditForm(product)}
+                                                    className="edit-button"
+                                                >
+                                                    Editar
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteProduct(product.id)}
+                                                    className="delete-button"
+                                                >
+                                                    Eliminar
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
                         </table>
                     )}
                 </>

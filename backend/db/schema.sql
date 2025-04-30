@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS products (
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
     stock INT NOT NULL DEFAULT 0,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+    image_path VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -54,6 +56,9 @@ INSERT INTO products (name, description, price, stock) VALUES
 ('Ibuprofen 400mg', 'Anti-inflammatory drug', 3.80, 50),
 ('Amoxicillin 250mg', 'Antibiotic', 15.00, 30)
 ON DUPLICATE KEY UPDATE name=name; -- Avoid error if products already exist (optional)
+
+-- Alter table to add image_path if it doesn't exist
+ALTER TABLE products ADD COLUMN IF NOT EXISTS image_path VARCHAR(255);
 
 -- Note: The following ALTER statements might fail if run multiple times without checks.
 -- Consider running them manually or adding checks if necessary.

@@ -61,18 +61,18 @@ function SaleForm({ onSaleSubmit, onCancel }) {
             setFormError('Producto seleccionado no encontrado o sin stock.');
             return;
         }
-         console.log("[SaleForm LOG] Found product:", productToAdd);
+        console.log("[SaleForm LOG] Found product:", productToAdd);
 
         const requestedQuantity = parseInt(quantity, 10);
         if (isNaN(requestedQuantity) || requestedQuantity <= 0) {
-             console.log("[SaleForm WARN] Validación fallida: Cantidad inválida parseada.", quantity);
-             setFormError('Cantidad inválida.');
+            console.log("[SaleForm WARN] Validación fallida: Cantidad inválida parseada.", quantity);
+            setFormError('Cantidad inválida.');
             return;
         }
 
         if (requestedQuantity > productToAdd.stock) {
-             console.log("[SaleForm WARN] Validación fallida: Stock insuficiente.", { needed: requestedQuantity, available: productToAdd.stock });
-            setFormError(`Stock insuficiente para ${productToAdd.name}. Solo ${productToAdd.stock} disponibles.`);
+            console.log("[SaleForm WARN] Validación fallida: Stock insuficiente.", { needed: requestedQuantity, available: productToAdd.stock });
+            setFormError(`No hay suficiente stock disponible para ${productToAdd.name}. Stock actual: ${productToAdd.stock} unidades.`);
             return;
         }
 
@@ -89,14 +89,14 @@ function SaleForm({ onSaleSubmit, onCancel }) {
                     const newQuantity = updatedCart[existingCartItemIndex].quantity + requestedQuantity;
                     if (newQuantity > productToAdd.stock) {
                         console.log("[SaleForm WARN] Stock insuficiente al actualizar cantidad en carrito.");
-                        setFormError(`Stock insuficiente para ${productToAdd.name}. Solo ${productToAdd.stock} disponibles en total.`);
+                        setFormError(`No hay suficiente stock disponible para ${productToAdd.name}. Stock actual: ${productToAdd.stock} unidades.`);
                         hadError = true;
                         return currentCart;
                     }
                     updatedCart[existingCartItemIndex] = {
                         ...updatedCart[existingCartItemIndex],
                         quantity: newQuantity
-                     };
+                    };
                 } else {
                     console.log("[SaleForm LOG] Product not in cart. Adding new item.");
                     updatedCart.push({
@@ -107,17 +107,26 @@ function SaleForm({ onSaleSubmit, onCancel }) {
                         stock: productToAdd.stock
                     });
                 }
-                 console.log("[SaleForm LOG] Cart update calculated. Updated cart:", updatedCart);
-                 if (!hadError) {
-                      // Only reset if cart update didn't hit an error immediately
-                      // Resetting state here might be slightly delayed, consider useEffect if needed
-                      setSelectedProductId('');
-                      setQuantity(1);
-                      console.log("[SaleForm LOG] Inputs reset after cart update.");
-                 }
+
+                if (!hadError) {
+                    // Actualizar la lista de productos disponibles
+                    const remainingStock = productToAdd.stock - requestedQuantity;
+                    setAvailableProducts(prevProducts => {
+                        return prevProducts.map(p => {
+                            if (p.id === productToAdd.id) {
+                                return { ...p, stock: remainingStock };
+                            }
+                            return p;
+                        }).filter(p => p.stock > 0); // Eliminar productos sin stock
+                    });
+
+                    setSelectedProductId('');
+                    setQuantity(1);
+                    console.log("[SaleForm LOG] Inputs reset after cart update.");
+                }
                 return updatedCart;
             });
-             console.log("[SaleForm LOG] setCart llamado.");
+            console.log("[SaleForm LOG] setCart llamado.");
         } catch (error) {
             console.error("[SaleForm ERROR] Error durante actualización de setCart:", error);
             setFormError("Ocurrió un error inesperado al actualizar el carrito.");
@@ -125,7 +134,26 @@ function SaleForm({ onSaleSubmit, onCancel }) {
     };
 
     const handleRemoveFromCart = (productId) => {
-         console.log(`[SaleForm LOG] handleRemoveFromCart called for product ID: ${productId}`);
+        console.log(`[SaleForm LOG] handleRemoveFromCart called for product ID: ${productId}`);
+        const removedItem = cart.find(item => item.product_id === productId);
+        if (removedItem) {
+            // Restaurar el stock al quitar del carrito
+            setAvailableProducts(prevProducts => {
+                const productExists = prevProducts.find(p => p.id === productId);
+                if (productExists) {
+                    return prevProducts.map(p => {
+                        if (p.id === productId) {
+                            return { ...p, stock: p.stock + removedItem.quantity };
+                        }
+                        return p;
+                    });
+                } else {
+                    // Si el producto fue filtrado por tener stock 0, lo reañadimos
+                    const originalProduct = { ...removedItem, id: productId, stock: removedItem.quantity };
+                    return [...prevProducts, originalProduct];
+                }
+            });
+        }
         setCart(cart.filter(item => item.product_id !== productId));
     };
 
@@ -137,7 +165,7 @@ function SaleForm({ onSaleSubmit, onCancel }) {
 
     const handleSubmitSale = async (e) => {
         e.preventDefault();
-         console.log("[SaleForm LOG] handleSubmitSale started.");
+        console.log("[SaleForm LOG] handleSubmitSale started.");
         setFormError(null);
         if (cart.length === 0) {
             console.log("[SaleForm WARN] Envío prevenido: Carrito vacío.");
@@ -145,7 +173,7 @@ function SaleForm({ onSaleSubmit, onCancel }) {
             return;
         }
         if (loadingError) {
-             console.log("[SaleForm WARN] Envío prevenido: Error de carga de datos iniciales.");
+            console.log("[SaleForm WARN] Envío prevenido: Error de carga de datos iniciales.");
             setFormError('No se puede enviar la venta debido a errores de carga.');
             return;
         }
@@ -160,7 +188,12 @@ function SaleForm({ onSaleSubmit, onCancel }) {
 
         try {
             const response = await axios.post(`${API_URL}/sales`, saleData);
-             console.log("[SaleForm LOG] Sale submitted successfully. Response:", response.data);
+            console.log("[SaleForm LOG] Sale submitted successfully. Response:", response.data);
+            
+            // Actualizar la lista de productos disponibles después de una venta exitosa
+            const updatedProducts = await axios.get(`${API_URL}/products`);
+            setAvailableProducts(updatedProducts.data.filter(p => p.stock > 0));
+            
             onSaleSubmit(response.data);
             // Reset form state fully on success
             setCart([]);
@@ -172,7 +205,7 @@ function SaleForm({ onSaleSubmit, onCancel }) {
             console.error("[SaleForm ERROR] Error al enviar venta:", err);
             setFormError(err.response?.data?.message || 'Error al enviar la venta. Intente de nuevo.');
         } finally {
-             console.log("[SaleForm LOG] Proceso de envío finalizado. Estableciendo submitting a false.");
+            console.log("[SaleForm LOG] Proceso de envío finalizado. Estableciendo submitting a false.");
             setSubmitting(false);
         }
     };
@@ -208,6 +241,9 @@ function SaleForm({ onSaleSubmit, onCancel }) {
                                 </option>
                             ))}
                         </select>
+                        {availableProducts.length === 0 && (
+                            <p className="error-message">No hay productos disponibles con stock.</p>
+                        )}
                     </div>
                     <div className="form-group quantity-group">
                         <label htmlFor="quantity">Cantidad:</label>
@@ -278,7 +314,7 @@ function SaleForm({ onSaleSubmit, onCancel }) {
 
             {/* Submit/Cancel Buttons Section */}
             <div className="form-actions">
-                <button type="submit" disabled={isDisabled || cart.length === 0 || submitting || !!formError}>
+                <button type="submit" disabled={isDisabled || cart.length === 0 || submitting}>
                     {submitting ? 'Enviando Venta...' : 'Enviar Venta'}
                 </button>
                 {onCancel && (

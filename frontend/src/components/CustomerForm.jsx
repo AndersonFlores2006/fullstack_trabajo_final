@@ -31,24 +31,41 @@ function CustomerForm({ customerToEdit, onFormSubmit, onCancel }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prevData => ({
-            ...prevData,
-            [name]: value
-        }));
-        setError(null); // Clear error on change
+        
+        // Validación especial para el teléfono
+        if (name === 'phone') {
+            // Solo permite números y limita a 9 dígitos
+            const numericValue = value.replace(/\D/g, '').slice(0, 9);
+            setFormData(prevData => ({
+                ...prevData,
+                [name]: numericValue
+            }));
+        } else {
+            setFormData(prevData => ({
+                ...prevData,
+                [name]: value
+            }));
+        }
+        setError(null);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
 
+        // Validaciones
         if (!formData.name) {
             setError('El nombre del cliente es obligatorio.');
             return;
         }
-        // Basic email validation
+
         if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
             setError('Por favor, ingrese una dirección de correo electrónico válida.');
+            return;
+        }
+
+        if (formData.phone && formData.phone.length !== 9) {
+            setError('El número de teléfono debe tener 9 dígitos.');
             return;
         }
 
@@ -57,7 +74,6 @@ function CustomerForm({ customerToEdit, onFormSubmit, onCancel }) {
             let response;
             const customerData = {
                 name: formData.name,
-                // Send email, phone, address only if they have a value, otherwise let backend handle null
                 ...(formData.email && { email: formData.email }),
                 ...(formData.phone && { phone: formData.phone }),
                 ...(formData.address && { address: formData.address }),
@@ -70,7 +86,7 @@ function CustomerForm({ customerToEdit, onFormSubmit, onCancel }) {
             }
             onFormSubmit(response.data);
             if (!isEditing) {
-                 setFormData({ name: '', email: '', phone: '', address: '' });
+                setFormData({ name: '', email: '', phone: '', address: '' });
             }
         } catch (err) {
             console.error("Error al enviar cliente:", err);
@@ -83,7 +99,7 @@ function CustomerForm({ customerToEdit, onFormSubmit, onCancel }) {
     return (
         <form onSubmit={handleSubmit} className="customer-form">
             <h3>{isEditing ? 'Editar Cliente' : 'Añadir Nuevo Cliente'}</h3>
-            {error && <p className="error-message">{error}</p>}
+            {error && <div className="error-message">{error}</div>}
 
             <div className="form-group">
                 <label htmlFor="name">Nombre: *</label>
@@ -95,8 +111,10 @@ function CustomerForm({ customerToEdit, onFormSubmit, onCancel }) {
                     onChange={handleChange}
                     required
                     disabled={submitting}
+                    className="form-control"
                 />
             </div>
+
             <div className="form-group">
                 <label htmlFor="email">Correo Electrónico:</label>
                 <input
@@ -106,20 +124,27 @@ function CustomerForm({ customerToEdit, onFormSubmit, onCancel }) {
                     value={formData.email}
                     onChange={handleChange}
                     disabled={submitting}
+                    className="form-control"
                 />
             </div>
-             <div className="form-group">
-                <label htmlFor="phone">Teléfono:</label>
+
+            <div className="form-group">
+                <label htmlFor="phone">Teléfono: (9 dígitos)</label>
                 <input
-                    type="tel" // Use tel type for phone numbers
+                    type="text"
                     id="phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
                     disabled={submitting}
+                    className="form-control"
+                    placeholder="Ingrese 9 dígitos"
+                    maxLength={9}
+                    pattern="\d{9}"
                 />
             </div>
-             <div className="form-group">
+
+            <div className="form-group">
                 <label htmlFor="address">Dirección:</label>
                 <textarea
                     id="address"
@@ -128,15 +153,25 @@ function CustomerForm({ customerToEdit, onFormSubmit, onCancel }) {
                     onChange={handleChange}
                     rows={3}
                     disabled={submitting}
+                    className="form-control"
                 />
             </div>
 
             <div className="form-actions">
-                <button type="submit" disabled={submitting}>
+                <button 
+                    type="submit" 
+                    disabled={submitting}
+                    className="action-button"
+                >
                     {submitting ? 'Guardando...' : (isEditing ? 'Actualizar Cliente' : 'Añadir Cliente')}
                 </button>
                 {onCancel && (
-                    <button type="button" onClick={onCancel} disabled={submitting} className="cancel-button">
+                    <button 
+                        type="button" 
+                        onClick={onCancel} 
+                        disabled={submitting} 
+                        className="cancel-button"
+                    >
                         Cancelar
                     </button>
                 )}

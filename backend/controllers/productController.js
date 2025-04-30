@@ -3,7 +3,7 @@ import { pool } from '../db/database.js';
 // Get all products
 export const getProducts = async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM products'); // Assuming a 'products' table exists
+        const [rows] = await pool.query('SELECT * FROM products WHERE active = TRUE'); // Solo productos activos
         res.json(rows);
     } catch (error) {
         console.error("Error fetching products:", error);
@@ -15,7 +15,7 @@ export const getProducts = async (req, res) => {
 export const getProductById = async (req, res) => {
     try {
         const { id } = req.params;
-        const [rows] = await pool.query('SELECT * FROM products WHERE id = ?', [id]);
+        const [rows] = await pool.query('SELECT * FROM products WHERE id = ? AND active = TRUE', [id]);
         if (rows.length <= 0) {
             return res.status(404).json({ message: 'Product not found' });
         }
@@ -85,11 +85,20 @@ export const updateProduct = async (req, res) => {
     }
 };
 
-// Delete a product
+// Delete a product (soft delete)
 export const deleteProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        const [result] = await pool.query('DELETE FROM products WHERE id = ?', [id]);
+        
+        // Verificar si el producto existe y está activo
+        const [checkResult] = await pool.query('SELECT 1 FROM products WHERE id = ? AND active = TRUE', [id]);
+        if (checkResult.length === 0) {
+            return res.status(404).json({ message: 'Product not found or already deleted' });
+        }
+
+        // Realizar soft delete
+        const [result] = await pool.query('UPDATE products SET active = FALSE WHERE id = ?', [id]);
+        
         if (result.affectedRows <= 0) {
             return res.status(404).json({ message: 'Product not found' });
         }

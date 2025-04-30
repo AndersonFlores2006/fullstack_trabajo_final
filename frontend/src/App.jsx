@@ -6,6 +6,10 @@ import SaleManagement from './components/SaleManagement';
 import CustomerManagement from './components/CustomerManagement';
 import './App.css';
 
+// Importar las imágenes
+import nurseLeft from './assets/nurse-left.png';
+import nurseRight from './assets/nurse-left.png'; // Usamos la misma imagen pero la voltearemos con CSS
+
 // API URL (Consider moving to a config file)
 const API_URL = 'http://localhost:5000/api';
 
@@ -16,66 +20,39 @@ const API_URL = 'http://localhost:5000/api';
 // };
 
 function App() {
-  // Function to get initial theme preference
-  const getInitialTheme = () => {
-    const storedTheme = localStorage.getItem('theme');
-    if (storedTheme) {
-      return storedTheme; // Use stored preference if exists
-    }
-    // Otherwise, check system preference
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  };
-
-  // Theme state: 'light' or 'dark'
-  const [theme, setTheme] = useState(getInitialTheme);
-
-  // Function to toggle theme
-  const toggleTheme = () => {
-    setTheme(prevTheme => {
-        const newTheme = prevTheme === 'light' ? 'dark' : 'light';
-        localStorage.setItem('theme', newTheme); // Save preference
-        return newTheme;
-    });
-  };
-
-  // Apply theme class to body using classList
-  useEffect(() => {
-    const bodyClassList = document.body.classList;
-    // Remove previous theme class before adding the new one
-    bodyClassList.remove('light', 'dark');
-    bodyClassList.add(theme);
-    console.log(`[App LOG] Theme applied: ${theme}`); // Log theme change
-  }, [theme]);
-
   return (
-    <div id="app-container"> {/* Changed from className="App" */}
-      <header className="App-header">
-        <div className="header-content">
-            <h1>Botica Nova Salud - Gestión</h1>
+    <>
+      <img src={nurseLeft} alt="" className="side-image side-image-left" />
+      <img src={nurseRight} alt="" className="side-image side-image-right" />
+      
+      <div className="app-container">
+        <header className="App-header">
+          <div className="header-content">
+            <h1>Botica Nova Salud</h1>
             <nav className="main-nav">
               <Link to="/" className="nav-link">Resumen</Link>
               <Link to="/products" className="nav-link">Productos</Link>
               <Link to="/sales" className="nav-link">Ventas</Link>
               <Link to="/customers" className="nav-link">Clientes</Link>
             </nav>
-        </div>
-         <button onClick={toggleTheme} className="theme-toggle-button" title="Cambiar tema">
-             {theme === 'light' ? '🌙' : '☀️'}
-         </button>
-      </header>
-      <main className="App-main">
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/products" element={<ProductManagement />} />
-          <Route path="/sales" element={<SaleManagement />} />
-          <Route path="/customers" element={<CustomerManagement />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
-      <footer className="App-footer">
-        <p>&copy; {new Date().getFullYear()} Nova Salud</p>
-      </footer>
-    </div>
+          </div>
+        </header>
+
+        <main className="content-wrapper">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/products" element={<ProductManagement />} />
+            <Route path="/sales" element={<SaleManagement />} />
+            <Route path="/customers" element={<CustomerManagement />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+
+        <footer className="App-footer">
+          <p>&copy; {new Date().getFullYear()} Nova Salud - Sistema de Gestión</p>
+        </footer>
+      </div>
+    </>
   );
 }
 
@@ -128,19 +105,19 @@ function Dashboard() {
   return (
     <div className="dashboard">
       <h2>Resumen General</h2>
-      {loading && <p>Cargando resumen...</p>}
-      {error && <p className="error-message">{error}</p>}
+      {loading && <div className="loading">Cargando resumen...</div>}
+      {error && <div className="error-message">{error}</div>}
       {!loading && (
         <div className="dashboard-summary">
-          <div className="summary-card" onClick={() => navigate('/products')} title="Ir a Productos">
+          <div className="summary-card" onClick={() => navigate('/products')}>
             <h3>{counts.products}</h3>
             <p>Productos Totales</p>
           </div>
-          <div className="summary-card" onClick={() => navigate('/customers')} title="Ir a Clientes">
+          <div className="summary-card" onClick={() => navigate('/customers')}>
             <h3>{counts.customers}</h3>
             <p>Clientes Totales</p>
           </div>
-          <div className="summary-card" onClick={() => navigate('/sales')} title="Ir a Ventas">
+          <div className="summary-card" onClick={() => navigate('/sales')}>
             <h3>{counts.sales}</h3>
             <p>Ventas Totales</p>
           </div>
@@ -151,7 +128,12 @@ function Dashboard() {
 }
 
 function NotFound() {
-  return <h2>Página No Encontrada</h2>;
+  return (
+    <div className="card text-center">
+      <h2>Página No Encontrada</h2>
+      <p>La página que buscas no existe o ha sido movida.</p>
+    </div>
+  );
 }
 
 export default App;

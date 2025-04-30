@@ -1,154 +1,222 @@
-#root {
+/* Root Variables */
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --secondary-color: #64748b;
+  --success-color: #22c55e;
+  --danger-color: #ef4444;
+  --warning-color: #f59e0b;
+  --info-color: #3b82f6;
+  --text-color: #1e293b;
+  --text-light: #ffffff;
+  --background: #f8fafc;
+  --card-background: #ffffff;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --radius-sm: 0.375rem;
+  --radius: 0.5rem;
+  --radius-lg: 0.75rem;
+}
+
+/* Base Styles */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  color: var(--text-color);
+  background-color: var(--background);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Side Images */
+.side-image {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 80vh;
+  max-height: 600px;
+  width: auto;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.side-image-left {
+  left: 0;
+}
+
+.side-image-right {
+  right: 0;
+  transform: translateY(-50%) scaleX(-1); /* Voltear la imagen horizontalmente */
+}
+
+/* Layout Container */
+.app-container {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-color: rgba(248, 250, 252, 0.9);
+}
+
+.content-wrapper {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 1rem;
+  position: relative;
+  z-index: 2;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-/* App.css - Application Specific Styles */
-
-/* Main App Layout */
-.App {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
+/* Header Styles */
 .App-header {
-  background-color: var(--header-background);
-  padding: 1.5rem 2rem;
-  color: var(--text-light);
-  text-align: center;
+  background-color: var(--card-background);
+  padding: 1rem 2rem;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .App-header h1 {
-  margin: 0 0 1rem 0;
-  font-size: 2rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
 }
 
 /* Navigation */
 .main-nav {
-  border-bottom: 1px solid var(--border-color);
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
 .nav-link {
-  font-weight: 500;
-  color: var(--primary-color);
-  text-decoration: none;
-  margin: 0 1rem;
-  padding: 0.5rem 0;
-  transition: color 0.2s ease;
-}
-
-.nav-link:hover,
-.nav-link.active { /* Add styling for active link if needed */
-  color: var(--button-hover-bg);
-  border-bottom: 2px solid var(--button-hover-bg);
-}
-
-/* Main Content Area */
-.App-main {
-  flex-grow: 1;
-  padding: 1rem 0; /* Vertical padding */
-}
-
-/* Footer */
-.App-footer {
-  padding: 1rem;
-  margin-top: 2rem;
-  text-align: center;
-  font-size: 0.9em;
-  color: #777;
-  border-top: 1px solid var(--border-color);
-}
-
-/* Headings */
-h2 {
   color: var(--text-color);
-  border-bottom: 2px solid var(--primary-color);
-  padding-bottom: 0.5rem;
-  margin-bottom: 1.5rem;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
-h3 {
-    color: var(--text-color);
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+.nav-link:hover {
+  background-color: var(--primary-color);
+  color: var(--text-light);
 }
 
-/* --- Component Styles --- */
+.nav-link.active {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+}
+
+/* Main Content */
+.App-main {
+  padding: 2rem 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
 /* Dashboard */
+.dashboard {
+  padding: 1rem;
+}
+
+.dashboard h2 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: var(--text-color);
+}
+
 .dashboard-summary {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
 .summary-card {
   background-color: var(--card-background);
   padding: 1.5rem;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
   border: 1px solid var(--border-color);
 }
 
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
 .summary-card h3 {
-  margin: 0 0 0.5rem 0;
   font-size: 2.5rem;
+  font-weight: 700;
   color: var(--primary-color);
+  margin: 0 0 0.5rem 0;
 }
 
 .summary-card p {
+  color: var(--secondary-color);
+  font-size: 1rem;
   margin: 0;
-  color: #666;
 }
 
-.dashboard-actions {
-  margin-top: 2rem;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
+/* Forms */
+form {
+  background-color: var(--card-background);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background-color: var(--card-background);
+  color: var(--text-color);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 /* Buttons */
@@ -158,398 +226,230 @@ button,
   color: var(--text-light);
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
+  border-radius: var(--radius);
   font-weight: 500;
+  cursor: pointer;
   transition: background-color 0.2s ease;
-  text-align: center;
 }
 
 button:hover,
 .action-button:hover {
-  background-color: var(--button-hover-bg);
+  background-color: var(--primary-hover);
 }
 
-button:disabled {
-  background-color: #ccc; /* Keep disabled light mode grey? */
-  /* TODO: Add dark mode disabled styles if needed */
-  cursor: not-allowed;
-}
-
-/* Style delete/cancel buttons specifically using classes and variables */
-.button-delete,
-.cancel-button {
-  background-color: var(--cancel-bg);
-  color: var(--cancel-text);
-  border: 1px solid var(--border-color);
-}
-
-.button-delete:hover,
-.cancel-button:hover {
-  background-color: var(--cancel-hover-bg);
-}
-
-/* Override for delete button specifically to use danger colors */
 .button-delete {
-    background-color: var(--danger-color);
-    color: var(--text-light);
-    border: 1px solid var(--danger-color);
+  background-color: var(--danger-color);
 }
 
 .button-delete:hover {
-    background-color: var(--danger-hover-bg);
-    border-color: var(--danger-hover-bg);
+  background-color: #dc2626;
 }
 
-/* Forms */
-form {
-  background-color: var(--card-background);
-  padding: 1.5rem 2rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  margin-bottom: 2rem;
+/* Footer */
+.App-footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--secondary-color);
+  border-top: 1px solid var(--border-color);
+  margin-top: 2rem;
 }
 
-.form-section {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px dashed var(--border-color);
+/* Responsive Design */
+@media (max-width: 1400px) {
+  .side-image {
+    height: 60vh;
+  }
 }
 
-form .form-section:last-of-type {
-  border-bottom: none;
-  padding-bottom: 0;
-  margin-bottom: 0;
+@media (max-width: 1200px) {
+  .side-image {
+    height: 50vh;
+  }
 }
 
-.form-row {
-  display: flex;
-  align-items: flex-end; /* Align items to bottom */
-  gap: 1rem;
-  flex-wrap: wrap; /* Allow wrapping */
-}
-
-.form-group {
-  flex: 1; /* Allow groups to grow */
-  min-width: 150px; /* Minimum width before wrapping */
-  margin-bottom: 0; /* Remove default div margin */
-}
-
-/* Adjust quantity input width specifically */
-.quantity-group input[type="number"] {
-    width: 80px;
-    flex-grow: 0; /* Prevent quantity input from growing too large */
-}
-.quantity-group label {
-    /* Optional: Adjust label spacing if needed */
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
-input[type="text"],
-input[type="number"],
-input[type="email"],
-input[type="tel"],
-textarea,
-select {
-  width: 100%;
-  padding: 0.6rem 0.75rem; /* Slightly smaller padding */
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  font-size: 0.95rem; /* Slightly smaller font */
-  background-color: var(--secondary-color);
-  color: var(--text-color);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-}
-
-textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-.form-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end; /* Align buttons to the right */
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px dashed var(--border-color);
-}
-
-/* Sale Form Specifics */
-.sale-form h4 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    color: var(--primary-color);
-}
-
-.add-to-cart-btn {
-    /* Align button with inputs */
-    padding: 0.6rem 1rem; /* Match input height */
-    white-space: nowrap;
-    flex-shrink: 0; /* Prevent button from shrinking */
-}
-
-.cart-list {
-    margin: 1rem 0;
-    padding-left: 0; /* Remove default ul padding */
-    list-style: none;
-}
-
-.cart-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--border-color);
-    background: none !important; /* Override general li styles */
-    margin-bottom: 0 !important;
-    border-radius: 0 !important;
-}
-
-.cart-item:last-child {
-    border-bottom: none;
-}
-
-.remove-item-btn {
-    background: none;
-    border: none;
-    color: var(--danger-color);
-    font-size: 1.2rem;
-    font-weight: bold;
-    padding: 0 0.5rem;
-    cursor: pointer;
-    line-height: 1; /* Ensure consistent alignment */
-}
-
-.remove-item-btn:hover {
-    color: var(--danger-hover-bg);
-}
-
-.cart-total {
-    text-align: right;
-    font-size: 1.1rem;
-    margin-top: 1rem;
-    margin-bottom: 0;
-}
-
-/* Theme Toggle Button */
-.theme-toggle-button {
-    position: absolute;
-    top: 1.5rem;
-    right: 2rem;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: var(--text-light);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
-}
-
-body.dark .theme-toggle-button {
-     background-color: rgba(0, 0, 0, 0.2);
-     border-color: rgba(255, 255, 255, 0.2);
-}
-
-.theme-toggle-button:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.5);
-}
-
-body.dark .theme-toggle-button:hover {
-    background-color: rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.3);
-}
-
-/* Adjust button styling for disabled state */
-button:disabled {
-  background-color: #999; /* Darker grey for disabled */
-  border-color: #999;
-  color: #eee;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-/* Ensure cancel button disabled state looks okay */
-.cancel-button:disabled {
-    background-color: #ddd;
-    color: #999;
-    border-color: #ccc;
-}
-body.dark .cancel-button:disabled {
-     background-color: #444;
-    color: #888;
-    border-color: #555;
-}
-
-/* Other general improvements */
-label {
-    color: var(--text-color);
-}
-
-/* Lists (Products, Sales, Customers) */
-ul[style*="list-style: none"] {
-  list-style: none;
-  padding: 0;
-}
-
-li[style*="border-bottom"],
-li[style*="border: 1px solid"] { /* Target list items */
-  background-color: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 1rem 1.5rem;
-  margin-bottom: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap; /* Allow wrapping on small screens */
-  gap: 1rem; /* Add gap between content and buttons */
+@media (max-width: 992px) {
+  .side-image {
+    display: none;
+  }
 }
 
 /* Error Messages */
-.error-message,
-p[style*="color: red"],
-p[style*="color: orange"] {
+.error-message {
   color: var(--danger-color);
-  background-color: rgba(231, 76, 60, 0.1);
-  border: 1px solid var(--danger-color);
+  background-color: rgba(239, 68, 68, 0.1);
   padding: 0.75rem;
-  border-radius: 4px;
-  margin-top: 1rem;
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
 }
 
-/* App.css - Continued */
-
-/* --- Responsive Adjustments --- */
-
-/* Medium screens (tablets) */
-@media (max-width: 768px) {
-    .App-header {
-        padding: 1rem 1.5rem;
-    }
-    .App-header h1 {
-        font-size: 1.6rem;
-    }
-    .main-nav {
-        margin-bottom: 1.5rem;
-    }
-    .nav-link {
-        margin: 0 0.75rem;
-    }
-    .theme-toggle-button {
-        top: 1rem;
-        right: 1.5rem;
-        padding: 0.3rem 0.6rem;
-    }
-    .App-main {
-        padding: 0.5rem 0;
-    }
-    .dashboard-summary {
-        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-        gap: 0.75rem;
-    }
-    .summary-card {
-        padding: 1rem;
-    }
-    .summary-card h3 {
-        font-size: 2rem;
-    }
-    form {
-        padding: 1rem 1.5rem;
-    }
-    .form-row {
-        gap: 0.75rem;
-    }
-    li[style*="border-bottom"],
-    li[style*="border: 1px solid"] {
-        padding: 0.75rem 1rem;
-        flex-direction: column; /* Stack list item content vertically */
-        align-items: flex-start; /* Align start */
-    }
-     li[style*="border-bottom"] > div:last-child,
-     li[style*="border: 1px solid"] > div:last-child { /* Target button container */
-        margin-top: 0.75rem; /* Add space above buttons */
-        width: 100%; /* Make button container full width */
-        display: flex;
-        justify-content: flex-end; /* Align buttons right */
-        gap: 0.5rem;
-    }
+/* Loading States */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
 }
 
-/* Small screens (mobiles) */
-@media (max-width: 480px) {
-    body {
-        font-size: 15px;
-    }
-    #root {
-        padding: 0 0.5rem;
-    }
-    .App-header {
-        padding: 0.75rem 1rem;
-    }
-    .App-header h1 {
-        font-size: 1.4rem;
-        margin-bottom: 0.75rem;
-    }
-    .main-nav {
-        padding-bottom: 0.5rem;
-        margin-bottom: 1rem;
-        /* Consider making nav scrollable horizontally if too many items */
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-    .nav-link {
-        margin: 0 0.5rem;
-        font-size: 0.9rem;
-        padding: 0.3rem 0;
-    }
-    .theme-toggle-button {
-        top: 0.75rem;
-        right: 1rem;
-        font-size: 0.7rem;
-    }
-    .dashboard-summary {
-        grid-template-columns: 1fr; /* Single column */
-        gap: 0.5rem;
-    }
-    .dashboard-actions {
-        flex-direction: column; /* Stack action buttons */
-        align-items: stretch; /* Make buttons full width */
-    }
-    button,
-    .action-button {
-        padding: 0.6rem 1rem;
-        font-size: 0.95rem;
-    }
-    form {
-        padding: 0.75rem 1rem;
-    }
-    .form-actions {
-         justify-content: center; /* Center buttons on small screens */
-    }
-    .sale-form .form-row {
-        flex-direction: column; /* Stack product/qty/add button vertically */
-        align-items: stretch; /* Make elements full width */
-    }
-    .quantity-group input[type="number"] {
-        width: 100%; /* Make quantity full width */
-    }
-    .add-to-cart-btn {
-        width: 100%; /* Make button full width */
-        margin-top: 0.5rem;
-    }
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1rem 0;
+  background-color: var(--card-background);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
 }
+
+thead {
+  background-color: var(--background);
+  border-bottom: 1px solid var(--border-color);
+}
+
+th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-color);
+  background-color: var(--background);
+  border-bottom: 2px solid var(--border-color);
+}
+
+td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--card-background);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover td {
+  background-color: rgba(37, 99, 235, 0.05);
+}
+
+/* Product Management Specific Styles */
+.product-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.product-description {
+  color: var(--secondary-color);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.add-product-button {
+  margin-bottom: 1.5rem;
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.add-product-button:hover {
+  background-color: var(--primary-hover);
+}
+
+.edit-button {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.edit-button:hover {
+  background-color: var(--primary-hover);
+}
+
+.delete-button {
+  background-color: var(--danger-color);
+  color: var(--text-light);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.delete-button:hover {
+  background-color: #dc2626;
+}
+
+/* Price and Stock Columns */
+.price-column {
+  text-align: right;
+  font-weight: 500;
+}
+
+.stock-column {
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Product Table Header */
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.product-header h2 {
+  margin: 0;
+}
+
+/* Table Column Widths */
+.name-column {
+  width: 40%;
+}
+
+.price-column {
+  width: 15%;
+}
+
+.stock-column {
+  width: 15%;
+}
+
+.actions-column {
+  width: 20%;
+}
+
+/* Card Styles */
+.card {
+  background-color: var(--card-background);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+/* Utility Classes */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1rem; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.p-1 { padding: 0.25rem; }
+.p-2 { padding: 0.5rem; }
+.p-4 { padding: 1rem; }
