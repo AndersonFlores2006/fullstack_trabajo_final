@@ -10,8 +10,7 @@ import './App.css';
 import nurseLeft from './assets/nurse-left.png';
 import nurseRight from './assets/nurse-left.png'; // Usamos la misma imagen pero la voltearemos con CSS
 
-// API URL (Consider moving to a config file)
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Basic Nav styling (will be improved in App.css)
 // const navStyle = { // Removed - styles moved to App.css

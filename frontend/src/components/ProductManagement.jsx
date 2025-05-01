@@ -4,7 +4,7 @@ import ProductList from './ProductList';
 import ProductForm from './ProductForm';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL;
 
 function ProductManagement() {
     const [products, setProducts] = useState([]);
