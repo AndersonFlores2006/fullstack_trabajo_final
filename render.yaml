@@ -6,13 +6,12 @@ services:
     staticPublishPath: ./frontend/dist
     envVars:
       - key: VITE_API_URL
-        value: https://fullstack-backend.onrender.com/api
+        value: https://fullstack-backend-0bhq.onrender.com/api
 
   - type: web
     name: fullstack-backend
-    env: node
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && npm start
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
     envVars:
       - key: DB_HOST
         value: turntable.proxy.rlwy.net
@@ -29,4 +28,4 @@ services:
       - key: NODE_ENV
         value: production
       - key: CORS_ORIGIN
-        value: https://fullstack-frontend.onrender.com 
+        value: https://fullstack-frontend-yatp.onrender.com 
