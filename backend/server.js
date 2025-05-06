@@ -19,7 +19,14 @@ const app = express();
 const PORT = process.env.PORT || 5000; // Use environment variable or default to 5000
 
 // Middleware
-app.use(cors()); // Enable Cross-Origin Resource Sharing
+const allowedOrigins = [
+  'https://fullstack-frontend-yatp.onrender.com',
+  'http://localhost:5173',
+];
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(express.json()); // Parse JSON request bodies
 
 // Servir archivos estáticos desde el directorio uploads
