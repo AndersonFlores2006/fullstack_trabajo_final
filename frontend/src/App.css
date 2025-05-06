@@ -73,7 +73,7 @@ body {
 /* Header Styles */
 .App-header {
   background-color: var(--card-background);
-  padding: 1rem 2rem;
+  padding: 1rem;
   box-shadow: var(--shadow);
   position: sticky;
   top: 0;
@@ -87,6 +87,8 @@ body {
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .App-header h1 {
@@ -273,6 +275,12 @@ button:hover,
   }
 }
 
+@media (max-width: 768px) {
+  .side-image {
+    display: none; /* Hide side images on mobile */
+  }
+}
+
 /* Error Messages */
 .error-message {
   color: var(--danger-color);
@@ -453,3 +461,52 @@ tr:hover td {
 .p-1 { padding: 0.25rem; }
 .p-2 { padding: 0.5rem; }
 .p-4 { padding: 1rem; }
+
+/* General Responsive Adjustments */
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 0.5rem;
+  }
+
+  .App-main {
+    padding: 1rem 0;
+  }
+
+  .dashboard h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  button,
+  .action-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Tables */
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  th, td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .product-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .edit-button,
+  .delete-button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Add viewport meta tag to index.html */

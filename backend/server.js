@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import productRoutes from './routes/productRoutes.js'; // Import product routes
 import saleRoutes from './routes/saleRoutes.js'; // Import sale routes
 import customerRoutes from './routes/customerRoutes.js'; // Import customer routes
+import ventasRoutes from './routes/ventas.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -33,6 +34,7 @@ app.get('/', (req, res) => {
 app.use('/api', productRoutes);
 app.use('/api', saleRoutes); // Add sale routes
 app.use('/api', customerRoutes); // Add customer routes
+app.use('/api/ventas', ventasRoutes);
 
 // TODO: Add routes for inventory, sales, customers, etc.
 

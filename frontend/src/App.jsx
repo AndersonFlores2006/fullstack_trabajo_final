@@ -4,6 +4,7 @@ import axios from 'axios'; // Import axios for Dashboard
 import ProductManagement from './components/ProductManagement';
 import SaleManagement from './components/SaleManagement';
 import CustomerManagement from './components/CustomerManagement';
+import VentasEstadisticas from './components/VentasEstadisticas';
 import './App.css';
 
 // Importar las imágenes
@@ -107,20 +108,23 @@ function Dashboard() {
       {loading && <div className="loading">Cargando resumen...</div>}
       {error && <div className="error-message">{error}</div>}
       {!loading && (
-        <div className="dashboard-summary">
-          <div className="summary-card" onClick={() => navigate('/products')}>
-            <h3>{counts.products}</h3>
-            <p>Productos Totales</p>
+        <>
+          <div className="dashboard-summary">
+            <div className="summary-card" onClick={() => navigate('/products')}>
+              <h3>{counts.products}</h3>
+              <p>Productos Totales</p>
+            </div>
+            <div className="summary-card" onClick={() => navigate('/customers')}>
+              <h3>{counts.customers}</h3>
+              <p>Clientes Totales</p>
+            </div>
+            <div className="summary-card" onClick={() => navigate('/sales')}>
+              <h3>{counts.sales}</h3>
+              <p>Ventas Totales</p>
+            </div>
           </div>
-          <div className="summary-card" onClick={() => navigate('/customers')}>
-            <h3>{counts.customers}</h3>
-            <p>Clientes Totales</p>
-          </div>
-          <div className="summary-card" onClick={() => navigate('/sales')}>
-            <h3>{counts.sales}</h3>
-            <p>Ventas Totales</p>
-          </div>
-        </div>
+          <VentasEstadisticas />
+        </>
       )}
     </div>
   );

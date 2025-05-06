@@ -138,4 +138,47 @@ export const createSale = async (req, res) => {
         console.log('[LOG] Releasing database connection.');
         connection.release();
     }
+};
+
+// Obtener estadísticas de ventas reales
+export const getSalesEstadisticas = async (req, res) => {
+    try {
+        // Total de ventas
+        const [totalResult] = await pool.query('SELECT SUM(total_amount) as totalVentas FROM sales');
+        const totalVentas = totalResult[0].totalVentas || 0;
+
+        // Ventas por mes
+        const [mesResult] = await pool.query(`
+            SELECT MONTH(sale_date) as mes, SUM(total_amount) as monto
+            FROM sales
+            GROUP BY mes
+            ORDER BY mes
+        `);
+        const ventasPorMes = {};
+        mesResult.forEach(row => {
+            ventasPorMes[row.mes - 1] = row.monto; // Meses base 0 para frontend
+        });
+
+        // Ventas por categoría (opcional, si existe)
+        // Suponiendo que sale_items tiene product_id y products tiene category
+        const [catResult] = await pool.query(`
+            SELECT p.category as categoria, SUM(si.subtotal) as monto
+            FROM sale_items si
+            JOIN products p ON si.product_id = p.id
+            GROUP BY p.category
+        `);
+        const ventasPorCategoria = {};
+        catResult.forEach(row => {
+            ventasPorCategoria[row.categoria || 'Sin categoría'] = row.monto;
+        });
+
+        res.json({
+            totalVentas,
+            ventasPorMes,
+            ventasPorCategoria
+        });
+    } catch (error) {
+        console.error('[ERROR] Error obteniendo estadísticas de ventas:', error);
+        res.status(500).json({ message: 'Error obteniendo estadísticas de ventas' });
+    }
 }; 
