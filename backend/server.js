@@ -5,6 +5,8 @@ import productRoutes from './routes/productRoutes.js'; // Import product routes
 import saleRoutes from './routes/saleRoutes.js'; // Import sale routes
 import customerRoutes from './routes/customerRoutes.js'; // Import customer routes
 import ventasRoutes from './routes/ventas.js';
+import authRoutes from './routes/auth.js';
+import auth from './middleware/auth.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -22,11 +24,22 @@ const PORT = process.env.PORT || 5000; // Use environment variable or default to
 const allowedOrigins = [
   'https://fullstack-frontend-yatp.onrender.com',
   'http://localhost:5173',
+  'http://localhost:3000'
 ];
+
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(express.json()); // Parse JSON request bodies
 
 // Servir archivos estáticos desde el directorio uploads
@@ -37,23 +50,30 @@ app.get('/', (req, res) => {
   res.send('Nova Salud Backend is running!');
 });
 
-// Use API routes (prefixed with /api)
-app.use('/api', productRoutes);
-app.use('/api', saleRoutes); // Add sale routes
-app.use('/api', customerRoutes); // Add customer routes
-app.use('/api/ventas', ventasRoutes);
+// Rutas de autenticación (sin protección)
+app.use('/api/auth', authRoutes);
+
+// Rutas protegidas
+app.use('/api', auth, productRoutes);
+app.use('/api', auth, saleRoutes); // Add sale routes
+app.use('/api', auth, customerRoutes); // Add customer routes
+app.use('/api/ventas', auth, ventasRoutes);
 
 // TODO: Add routes for inventory, sales, customers, etc.
 
-// Error handling para multer
+// Error handling
 app.use((err, req, res, next) => {
+  console.error(err.stack);
   if (err.code === 'LIMIT_FILE_SIZE') {
     return res.status(400).json({ message: 'El archivo es demasiado grande. Máximo 5MB.' });
   }
   if (err.message === 'Solo se permiten archivos de imagen') {
     return res.status(400).json({ message: err.message });
   }
-  next(err);
+  if (err.message === 'Not allowed by CORS') {
+    return res.status(403).json({ message: 'Acceso no permitido' });
+  }
+  res.status(500).json({ message: 'Error en el servidor' });
 });
 
 // Start the server
