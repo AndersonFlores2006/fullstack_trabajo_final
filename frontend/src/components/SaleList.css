@@ -1,0 +1,63 @@
+/* Styles for SaleList */
+
+.sale-list-container {
+    margin-top: 1rem;
+}
+
+.sale-list-container h3 {
+    /* Styles inherited from App.css h3 */
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 1.2em;
+}
+
+.sale-list {
+    list-style: none;
+    padding: 0;
+}
+
+.sale-item {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.sale-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem; /* Row and column gap */
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.sale-header span {
+    font-size: 0.9em;
+}
+
+.sale-items-container {
+    margin-top: 0.5rem;
+    font-size: 0.95em;
+}
+
+.sale-items-list {
+    list-style: none;
+    padding-left: 1rem; /* Indent items */
+    margin-top: 0.5rem;
+}
+
+.sale-item-detail {
+    margin-bottom: 0.3rem;
+    color: var(--text-muted);
+}
+
+.no-items-message {
+    font-style: italic;
+    color: var(--text-muted);
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+} 

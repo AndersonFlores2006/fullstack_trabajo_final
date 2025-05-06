@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: fullstack-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://fullstack-backend-0bhq.onrender.com/api
+
+  - type: web
+    name: fullstack-backend
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    envVars:
+      - key: DB_HOST
+        value: turntable.proxy.rlwy.net
+      - key: DB_USER
+        value: root
+      - key: DB_PASSWORD
+        value: zAbgeCNfUOmgRMUjooltDVFfoifYOBXQ
+      - key: DB_PORT
+        value: 15309
+      - key: DB_NAME
+        value: railway
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGIN
+        value: https://fullstack-frontend-yatp.onrender.com 

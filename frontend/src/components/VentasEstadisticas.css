@@ -1,0 +1,99 @@
+.ventas-estadisticas {
+    padding: 1rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.resumen-total {
+    margin-bottom: 2rem;
+}
+
+.resumen-card {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.resumen-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.total-ventas {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.moneda {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+.graficos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.grafico-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.grafico-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.grafico-wrapper {
+    height: 300px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .ventas-estadisticas {
+        padding: 0.5rem;
+    }
+
+    .resumen-card {
+        padding: 1.5rem;
+    }
+
+    .resumen-card h2 {
+        font-size: 1.25rem;
+    }
+
+    .total-ventas {
+        font-size: 2rem;
+    }
+
+    .graficos-container {
+        grid-template-columns: 1fr;
+    }
+
+    .grafico-wrapper {
+        height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .resumen-card {
+        padding: 1rem;
+    }
+
+    .total-ventas {
+        font-size: 1.75rem;
+    }
+
+    .grafico-wrapper {
+        height: 200px;
+    }
+} 
