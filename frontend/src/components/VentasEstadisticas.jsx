@@ -31,7 +31,7 @@ const VentasEstadisticas = () => {
     useEffect(() => {
         const fetchEstadisticas = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/ventas/estadisticas');
+                const response = await axios.get('http://localhost:5000/api/sales/estadisticas');
                 setEstadisticas(response.data);
             } catch (error) {
                 console.error('Error al obtener estadísticas:', error);
