@@ -139,7 +139,7 @@ function ProductManagement() {
                     ) : products.length === 0 ? (
                         <p>No se encontraron productos.</p>
                     ) : (
-                        <table>
+                        <table className="products-table">
                             <thead>
                                 <tr>
                                     <th className="name-column">Nombre / Descripción</th>
