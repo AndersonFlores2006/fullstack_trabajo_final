@@ -13,4 +13,5 @@ INSERT INTO products (name, description, price, stock) VALUES
 ('Amoxicilina 500mg', 'Antibiótico de amplio espectro', 18.00, 20),
 ('Cetirizina 10mg', 'Antialérgico', 4.00, 55),
 ('Ibuprofeno 600mg', 'Antiinflamatorio y analgésico', 5.00, 50)
+
 ON DUPLICATE KEY UPDATE name=name; 
