@@ -21,6 +21,8 @@ ChartJS.register(
     Legend
 );
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const VentasEstadisticas = () => {
     const [estadisticas, setEstadisticas] = useState({
         totalVentas: 0,
@@ -31,7 +33,7 @@ const VentasEstadisticas = () => {
     useEffect(() => {
         const fetchEstadisticas = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/sales/estadisticas');
+                const response = await axios.get(`${API_URL}/sales/estadisticas`);
                 setEstadisticas(response.data);
             } catch (error) {
                 console.error('Error al obtener estadísticas:', error);
