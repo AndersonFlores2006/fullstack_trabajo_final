@@ -51,10 +51,6 @@
     transform: translateX(2px);
 }
 
-.product-info {
-    /* Allow name and description to take up space */
-}
-
 .product-description {
     display: block; /* Make description appear on new line */
     font-size: 0.9em;

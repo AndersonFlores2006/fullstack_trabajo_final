@@ -116,8 +116,8 @@ const VentasEstadisticas = () => {
                 <div className="resumen-card">
                     <h2>Resumen de Ventas</h2>
                     <div className="total-ventas">
-                        <span className="moneda">$</span>
-                        <span className="monto">{estadisticas.totalVentas.toFixed(2)}</span>
+                        <span className="moneda">S/.</span>
+                        <span className="monto">{Number(estadisticas.totalVentas || 0).toFixed(2)}</span>
                     </div>
                 </div>
             </div>
