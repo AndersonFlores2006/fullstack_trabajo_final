@@ -110,3 +110,68 @@
     color: var(--text-light); /* Assuming light text on danger */
     border-color: var(--danger-color);
 }
+
+@media (max-width: 900px) {
+    .products-table th,
+    .products-table td {
+        padding: 8px 6px;
+        font-size: 0.98em;
+    }
+    .product-actions .button-edit,
+    .product-actions .button-delete {
+        font-size: 1em;
+        padding: 7px 12px;
+        margin-left: 6px;
+    }
+    .product-stock {
+        font-size: 1.1em;
+        font-weight: 600;
+    }
+}
+
+@media (max-width: 600px) {
+    .products-table, .products-table thead, .products-table tbody, .products-table th, .products-table td, .products-table tr {
+        display: block;
+        width: 100%;
+    }
+    .products-table thead {
+        display: none;
+    }
+    .product-list-body tr {
+        margin-bottom: 1.2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        border-radius: 8px;
+        background: #fff;
+        padding: 1rem 0.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .product-info, .product-price, .product-stock, .product-actions {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.5rem;
+        text-align: left;
+    }
+    .product-info strong {
+        font-size: 1.1em;
+    }
+    .product-stock {
+        font-size: 1.15em;
+        font-weight: bold;
+        color: #357abd;
+    }
+    .product-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-start;
+        margin-bottom: 0;
+    }
+    .product-actions .button-edit,
+    .product-actions .button-delete {
+        width: 48%;
+        font-size: 1.05em;
+        padding: 10px 0;
+        margin-left: 0;
+    }
+}
