@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-function Register() {
+function Register({ setIsAuthenticated }) {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -42,6 +42,7 @@ function Register() {
 
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
+        setIsAuthenticated(true);
         navigate('/');
       }
     } catch (err) {

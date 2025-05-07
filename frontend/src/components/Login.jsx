@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-function Login() {
+function Login({ setIsAuthenticated }) {
   const [credentials, setCredentials] = useState({
     username: '',
     password: ''
@@ -30,6 +30,7 @@ function Login() {
       const response = await axios.post(`${API_URL}/auth/login`, credentials);
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
+        setIsAuthenticated(true);
         navigate('/');
       }
     } catch (err) {
