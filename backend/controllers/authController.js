@@ -1,5 +1,6 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
+import { pool } from '../db/database.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
@@ -42,7 +43,7 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, role, name, email, phone, address } = req.body;
 
     // Verificar si el usuario ya existe
     const existingUser = await User.findByUsername(username);
@@ -50,16 +51,34 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: 'El usuario ya existe' });
     }
 
-    // Crear nuevo usuario
+    // Crear nuevo usuario con el rol recibido (cliente o vendedor)
     const user = await User.create({
       username,
       password,
-      role: 'user'
+      role: role || 'user'
     });
 
-    // Generar token
+    // Si el rol es cliente, crear también el registro en customers con los datos extra
+    if ((user.role === 'cliente' || user.role === 'customer') && user.id) {
+      try {
+        await pool.query(
+          'INSERT INTO customers (name, email, phone, address, user_id) VALUES (?, ?, ?, ?, ?)',
+          [name || username, email || null, phone || null, address || null, user.id]
+        );
+      } catch (err) {
+        console.error('Error creando registro en customers:', err);
+        if (err.code === 'ER_DUP_ENTRY' && err.message.includes('email')) {
+          // Eliminar el usuario recién creado para evitar inconsistencia
+          await pool.query('DELETE FROM users WHERE id = ?', [user.id]);
+          return res.status(400).json({ message: 'El correo electrónico ya está registrado como cliente.' });
+        }
+        // No retornamos error al cliente, pero lo logueamos
+      }
+    }
+
+    // Generar token con el rol correcto
     const token = jwt.sign(
-      { userId: user.id, role: user.role },
+      { id: user.id, username: user.username, role: user.role },
       JWT_SECRET,
       { expiresIn: '24h' }
     );

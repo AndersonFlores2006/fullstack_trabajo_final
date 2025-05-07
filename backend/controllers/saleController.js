@@ -46,7 +46,14 @@ export const createSale = async (req, res) => {
     const connection = await pool.getConnection();
     console.log('[LOG] Database connection obtained for transaction.');
     try {
-        const { customer_id, items } = req.body;
+        const { items } = req.body;
+        // Buscar el customer_id del usuario autenticado
+        const userId = req.user.id;
+        const [customerRows] = await connection.query('SELECT id FROM customers WHERE user_id = ?', [userId]);
+        if (!customerRows.length) {
+            return res.status(400).json({ message: 'No se encontró un cliente asociado a este usuario.' });
+        }
+        const customer_id = customerRows[0].id;
 
         // --- Input Validation ---
         if (!items || !Array.isArray(items) || items.length === 0) {
@@ -59,13 +66,7 @@ export const createSale = async (req, res) => {
                 return res.status(400).json({ message: 'Invalid item data. Each item requires product_id and positive quantity.' });
             }
         }
-        if (customer_id) {
-            const [customerExists] = await connection.query('SELECT 1 FROM customers WHERE id = ?', [customer_id]);
-            if (customerExists.length === 0) {
-                 console.log(`[VALIDATION FAIL] Customer ID ${customer_id} not found.`);
-                return res.status(400).json({ message: `Customer with ID ${customer_id} not found.` });
-            }
-        }
+        // Validar que el customer_id existe (ya lo hicimos arriba)
 
         console.log('[LOG] Starting transaction...');
         await connection.beginTransaction();
@@ -90,7 +91,7 @@ export const createSale = async (req, res) => {
         console.log('[LOG] Inserting sale record...');
         const [saleResult] = await connection.query(
             'INSERT INTO sales (total_amount, customer_id) VALUES (?, ?)',
-            [calculatedTotalAmount, customer_id || null]
+            [calculatedTotalAmount, customer_id]
         );
         const saleId = saleResult.insertId;
         console.log(`[LOG] Sale record created with ID: ${saleId}`);
@@ -127,12 +128,15 @@ export const createSale = async (req, res) => {
 
     } catch (error) {
         console.error("[ERROR] Error creating sale inside transaction:", error); // Log error
+        if (error && error.stack) {
+          console.error(error.stack);
+        }
         console.log('[LOG] Rolling back transaction...');
         await connection.rollback();
-        if (error.message.startsWith('Insufficient stock') || error.message.includes('not found')) {
+        if (error.message && (error.message.startsWith('Insufficient stock') || error.message.includes('not found'))) {
             res.status(400).json({ message: error.message });
         } else {
-            res.status(500).json({ message: 'Error creating sale' });
+            res.status(500).json({ message: error.message || 'Error creating sale' });
         }
     } finally {
         console.log('[LOG] Releasing database connection.');
@@ -180,5 +184,50 @@ export const getSalesEstadisticas = async (req, res) => {
     } catch (error) {
         console.error('[ERROR] Error obteniendo estadísticas de ventas:', error);
         res.status(500).json({ message: 'Error obteniendo estadísticas de ventas' });
+    }
+};
+
+// Obtener ventas del cliente autenticado
+export const getMisVentas = async (req, res) => {
+    try {
+        // El id del usuario autenticado está en req.user.id
+        const userId = req.user.id;
+        // Buscar el id del cliente asociado a este usuario
+        const [customerRows] = await pool.query('SELECT id FROM customers WHERE user_id = ?', [userId]);
+        if (!customerRows.length) {
+            return res.json([]); // No es cliente o no tiene compras
+        }
+        const customerId = customerRows[0].id;
+        // Buscar ventas de este cliente
+        const query = `
+            SELECT
+                s.id AS sale_id,
+                s.sale_date,
+                s.total_amount,
+                s.customer_id,
+                (
+                    SELECT JSON_ARRAYAGG(
+                        JSON_OBJECT(
+                            'sale_item_id', si.id,
+                            'product_id', si.product_id,
+                            'product_name', p.name,
+                            'quantity', si.quantity,
+                            'unit_price', si.unit_price,
+                            'subtotal', si.subtotal
+                        )
+                    )
+                    FROM sale_items si
+                    JOIN products p ON si.product_id = p.id
+                    WHERE si.sale_id = s.id
+                ) AS items
+            FROM sales s
+            WHERE s.customer_id = ?
+            ORDER BY s.sale_date DESC;
+        `;
+        const [ventas] = await pool.query(query, [customerId]);
+        res.json(ventas);
+    } catch (error) {
+        console.error('[ERROR] Error obteniendo ventas del cliente:', error);
+        res.status(500).json({ message: 'Error obteniendo tu historial de compras' });
     }
 }; 
