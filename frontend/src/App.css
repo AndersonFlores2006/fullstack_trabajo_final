@@ -621,3 +621,9 @@ tr:hover td {
 .register-link a:hover {
   text-decoration: underline;
 }
+
+.low-stock {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+  font-weight: bold;
+}

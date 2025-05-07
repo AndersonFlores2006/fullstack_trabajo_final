@@ -158,7 +158,16 @@ function ProductManagement() {
                                             )}
                                         </td>
                                         <td className="price-column">S/.{product.price.toFixed(2)}</td>
-                                        <td className="stock-column">{product.stock}</td>
+                                        <td className="stock-column">
+                                            <span className={product.stock <= 10 ? 'low-stock' : ''}>
+                                                {product.stock}
+                                                {product.stock <= 10 && (
+                                                    <span title="Stock bajo" style={{ color: '#ef4444', marginLeft: 6, fontWeight: 'bold', fontSize: '1.2em', verticalAlign: 'middle' }}>
+                                                        &#9888;
+                                                    </span>
+                                                )}
+                                            </span>
+                                        </td>
                                         <td>
                                             <div className="product-actions">
                                                 <button
