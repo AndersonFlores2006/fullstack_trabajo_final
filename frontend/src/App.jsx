@@ -7,6 +7,8 @@ import CustomerManagement from './components/CustomerManagement';
 import VentasEstadisticas from './components/VentasEstadisticas';
 import Login from './components/Login';
 import Register from './components/Register';
+import Comprar from './components/Comprar';
+import ResumenCliente from './components/ResumenCliente';
 import './App.css';
 
 // Importar las imágenes
@@ -46,16 +48,25 @@ function ProtectedRoute({ children }) {
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsAuthenticated(!!token);
+    if (token) {
+      // Decodifica el token para obtener el rol
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      setUserRole(payload.role);
+    } else {
+      setUserRole(null);
+    }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsAuthenticated(false);
+    setUserRole(null);
     navigate('/login');
   };
 
@@ -70,10 +81,19 @@ function App() {
             <div className="header-content">
               <h1>Botica Nova Salud</h1>
               <nav className="main-nav">
-                <Link to="/" className="nav-link">Resumen</Link>
-                <Link to="/products" className="nav-link">Productos</Link>
-                <Link to="/sales" className="nav-link">Ventas</Link>
-                <Link to="/customers" className="nav-link">Clientes</Link>
+                {userRole === 'cliente' ? (
+                  <>
+                    <Link to="/comprar" className="nav-link">Comprar</Link>
+                    <Link to="/resumen" className="nav-link">Resumen</Link>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/" className="nav-link">Resumen</Link>
+                    <Link to="/products" className="nav-link">Productos</Link>
+                    <Link to="/sales" className="nav-link">Ventas</Link>
+                    <Link to="/customers" className="nav-link">Clientes</Link>
+                  </>
+                )}
                 <button onClick={handleLogout} className="nav-link logout-button">Cerrar Sesión</button>
               </nav>
             </div>
@@ -82,8 +102,8 @@ function App() {
 
         <main className="content-wrapper">
           <Routes>
-            <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-            <Route path="/register" element={<Register setIsAuthenticated={setIsAuthenticated} />} />
+            <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} setUserRole={setUserRole} />} />
+            <Route path="/register" element={<Register setIsAuthenticated={setIsAuthenticated} setUserRole={setUserRole} />} />
             <Route path="/" element={
               <ProtectedRoute>
                 <Dashboard />
@@ -104,6 +124,8 @@ function App() {
                 <CustomerManagement />
               </ProtectedRoute>
             } />
+            <Route path="/comprar" element={<Comprar />} />
+            <Route path="/resumen" element={<ResumenCliente />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

@@ -4,11 +4,16 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-function Register({ setIsAuthenticated }) {
+function Register({ setIsAuthenticated, setUserRole }) {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    role: 'vendedor',
+    name: '',
+    email: '',
+    phone: '',
+    address: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -35,15 +40,31 @@ function Register({ setIsAuthenticated }) {
     }
 
     try {
-      const response = await axios.post(`${API_URL}/auth/register`, {
+      const payload = {
         username: formData.username,
-        password: formData.password
-      });
+        password: formData.password,
+        role: formData.role
+      };
+      if (formData.role === 'cliente') {
+        payload.name = formData.name;
+        payload.email = formData.email;
+        payload.phone = formData.phone;
+        payload.address = formData.address;
+      }
+      const response = await axios.post(`${API_URL}/auth/register`, payload);
 
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         setIsAuthenticated(true);
-        navigate('/');
+        if (setUserRole) {
+          const payload = JSON.parse(atob(response.data.token.split('.')[1]));
+          setUserRole(payload.role);
+        }
+        if (formData.role === 'cliente') {
+          navigate('/comprar');
+        } else {
+          navigate('/');
+        }
       }
     } catch (err) {
       console.error('Error de registro:', err);
@@ -102,6 +123,78 @@ function Register({ setIsAuthenticated }) {
               minLength="6"
             />
           </div>
+          <div className="form-group">
+            <label htmlFor="role">Registrarme como:</label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              disabled={loading}
+              required
+            >
+              <option value="vendedor">Vendedor</option>
+              <option value="cliente">Cliente</option>
+            </select>
+          </div>
+          {formData.role === 'cliente' && (
+            <>
+              <div className="form-group">
+                <label htmlFor="name">Nombre completo:</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required={formData.role === 'cliente'}
+                  disabled={loading}
+                  placeholder="Ej: Anderson Flores"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="email">Correo electrónico:</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required={formData.role === 'cliente'}
+                  disabled={loading}
+                  placeholder="Ej: correo@ejemplo.com"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="phone">Teléfono:</label>
+                <input
+                  type="text"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required={formData.role === 'cliente'}
+                  disabled={loading}
+                  placeholder="Ej: 987654321"
+                  maxLength={9}
+                  pattern="\d{9}"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="address">Dirección:</label>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required={formData.role === 'cliente'}
+                  disabled={loading}
+                  placeholder="Ej: Av. Siempre Viva 123"
+                />
+              </div>
+            </>
+          )}
           {error && <div className="error-message">{error}</div>}
           <button 
             type="submit" 

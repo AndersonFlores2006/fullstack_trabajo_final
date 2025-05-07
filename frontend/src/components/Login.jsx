@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-function Login({ setIsAuthenticated }) {
+function Login({ setIsAuthenticated, setUserRole }) {
   const [credentials, setCredentials] = useState({
     username: '',
     password: ''
@@ -31,6 +31,10 @@ function Login({ setIsAuthenticated }) {
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         setIsAuthenticated(true);
+        if (setUserRole) {
+          const payload = JSON.parse(atob(response.data.token.split('.')[1]));
+          setUserRole(payload.role);
+        }
         navigate('/');
       }
     } catch (err) {
