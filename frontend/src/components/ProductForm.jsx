@@ -8,7 +8,8 @@ function ProductForm({ productToEdit, onFormSubmit, onCancel }) {
         name: '',
         description: '',
         price: '',
-        stock: ''
+        stock: '',
+        image: ''
     });
     const [error, setError] = useState(null);
     const [submitting, setSubmitting] = useState(false);
@@ -19,10 +20,11 @@ function ProductForm({ productToEdit, onFormSubmit, onCancel }) {
                 name: productToEdit.name || '',
                 description: productToEdit.description || '',
                 price: productToEdit.price?.toString() || '',
-                stock: productToEdit.stock?.toString() || ''
+                stock: productToEdit.stock?.toString() || '',
+                image: productToEdit.image || ''
             });
         } else {
-            setFormData({ name: '', description: '', price: '', stock: '' });
+            setFormData({ name: '', description: '', price: '', stock: '', image: '' });
         }
     }, [productToEdit]);
 
@@ -64,7 +66,8 @@ function ProductForm({ productToEdit, onFormSubmit, onCancel }) {
                 name: formData.name,
                 description: formData.description || '',
                 price: priceNum,
-                stock: stockNum
+                stock: stockNum,
+                image: formData.image || ''
             };
 
             if (productToEdit) {
@@ -75,7 +78,7 @@ function ProductForm({ productToEdit, onFormSubmit, onCancel }) {
             onFormSubmit(response.data);
 
             if (!productToEdit) {
-                setFormData({ name: '', description: '', price: '', stock: '' });
+                setFormData({ name: '', description: '', price: '', stock: '', image: '' });
             }
         } catch (err) {
             console.error("Error submitting product:", err);
@@ -142,6 +145,18 @@ function ProductForm({ productToEdit, onFormSubmit, onCancel }) {
                         disabled={submitting}
                     />
                 </div>
+            </div>
+            <div className="form-group">
+                <label htmlFor="image">URL de la imagen:</label>
+                <input
+                    type="text"
+                    id="image"
+                    name="image"
+                    value={formData.image}
+                    onChange={handleStandardChange}
+                    disabled={submitting}
+                    placeholder="https://..."
+                />
             </div>
 
             <div className="form-actions">

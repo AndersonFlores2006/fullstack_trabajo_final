@@ -1,8 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const API_URL = import.meta.env.VITE_API_URL;
+
+// Mapeo de nombres a imágenes locales
+const imagenesMedicinas = {
+  'Paracetamol': '/medicinas/PARACETAMOL.jpg',
+  'Aspirina': '/medicinas/aspirina.jpg',
+  'Loratadina': '/medicinas/Loratadina-10-mg.png',
+  'Omeprazol': '/medicinas/omeprazol-tab5709.jpg',
+  'Metformina': '/medicinas/Metformina.jpg',
+  'Losartán': '/medicinas/LOSARTAN.jpg',
+  'Salbutamol': '/medicinas/SALBUTAMOL.webp',
+  'Diclofenaco': '/medicinas/DICLOFENACO.jpg',
+  'Amoxicilina': '/medicinas/AMOXICILINA.jpg',
+  'Cetirizina': '/medicinas/cetirizina.jpg',
+  'Ibuprofeno': '/medicinas/ibuprofeno.jpg'
+};
 
 function Comprar() {
   const [products, setProducts] = useState([]);
@@ -74,6 +90,13 @@ function Comprar() {
       setCardExpiry('');
       setCardCVV('');
       fetchProducts();
+      Swal.fire({
+        title: '¡Compra exitosa!',
+        text: 'Gracias por tu compra.',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 2000
+      });
       setTimeout(() => {
         navigate('/resumen');
       }, 1500);
@@ -94,17 +117,27 @@ function Comprar() {
         <h2>Catálogo de Productos</h2>
         {loading ? <div>Cargando productos...</div> : error ? <div className="error-message">{error}</div> : (
           <div className="comprar-productos-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
-            {products.map(product => (
-              <div key={product.id} className="card" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{product.name}</div>
-                <div style={{ color: '#64748b', fontSize: '0.95rem', marginBottom: 8 }}>{product.description}</div>
-                <div style={{ fontWeight: 'bold', marginBottom: 8 }}>S/.{Number(product.price).toFixed(2)}</div>
-                <div style={{ marginBottom: 8 }}>Stock: {product.stock}</div>
-                <button onClick={() => addToCart(product)} disabled={product.stock === 0} className="add-product-button">
-                  {product.stock === 0 ? 'Sin stock' : 'Agregar al carrito'}
-                </button>
-              </div>
-            ))}
+            {products.map(product => {
+              let imgSrc = product.image;
+              if (!imgSrc) {
+                const key = Object.keys(imagenesMedicinas).find(k => product.name.toLowerCase().includes(k.toLowerCase()));
+                imgSrc = key ? imagenesMedicinas[key] : undefined;
+              }
+              return (
+                <div key={product.id} className="card" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  {imgSrc && (
+                    <img src={imgSrc} alt={product.name} style={{ width: '100px', height: '100px', objectFit: 'cover', marginBottom: 8 }} />
+                  )}
+                  <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{product.name}</div>
+                  <div style={{ color: '#64748b', fontSize: '0.95rem', marginBottom: 8 }}>{product.description}</div>
+                  <div style={{ fontWeight: 'bold', marginBottom: 8 }}>S/.{Number(product.price).toFixed(2)}</div>
+                  <div style={{ marginBottom: 8 }}>Stock: {product.stock}</div>
+                  <button onClick={() => addToCart(product)} disabled={product.stock === 0} className="add-product-button">
+                    {product.stock === 0 ? 'Sin stock' : 'Agregar al carrito'}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
@@ -142,7 +175,8 @@ function Comprar() {
                   type="text"
                   placeholder="MM/AA"
                   value={cardExpiry}
-                  onChange={e => setCardExpiry(e.target.value.replace(/[^0-9/]/g, '').slice(0,5))}
+                  maxLength={4}
+                  onChange={e => setCardExpiry(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
                   style={{ width: '50%', marginBottom: 8, padding: 6 }}
                   disabled={success}
                 />
@@ -150,7 +184,8 @@ function Comprar() {
                   type="text"
                   placeholder="CVV"
                   value={cardCVV}
-                  onChange={e => setCardCVV(e.target.value.replace(/[^0-9]/g, '').slice(0,4))}
+                  maxLength={3}
+                  onChange={e => setCardCVV(e.target.value.replace(/[^0-9]/g, '').slice(0, 3))}
                   style={{ width: '50%', marginBottom: 8, padding: 6 }}
                   disabled={success}
                 />

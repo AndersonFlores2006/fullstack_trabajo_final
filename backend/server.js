@@ -1,12 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import productRoutes from './routes/productRoutes.js'; // Import product routes
-import saleRoutes from './routes/saleRoutes.js'; // Import sale routes
-import customerRoutes from './routes/customerRoutes.js'; // Import customer routes
-import ventasRoutes from './routes/ventas.js';
-import authRoutes from './routes/auth.js';
-import auth from './middleware/auth.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -17,8 +11,16 @@ const __dirname = path.dirname(__filename);
 // Load environment variables
 dotenv.config();
 
+// Import routes
+import productRoutes from './routes/productRoutes.js';
+import saleRoutes from './routes/saleRoutes.js';
+import customerRoutes from './routes/customerRoutes.js';
+import ventasRoutes from './routes/ventas.js';
+import authRoutes from './routes/auth.js';
+import auth from './middleware/auth.js';
+
 const app = express();
-const PORT = process.env.PORT || 5000; // Use environment variable or default to 5000
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 const allowedOrigins = [
@@ -40,9 +42,9 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(express.json()); // Parse JSON request bodies
+app.use(express.json());
 
-// Servir archivos estáticos desde el directorio uploads
+// Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Basic route for testing
@@ -50,13 +52,13 @@ app.get('/', (req, res) => {
   res.send('Nova Salud Backend is running!');
 });
 
-// Rutas de autenticación (sin protección)
+// Authentication routes (unprotected)
 app.use('/api/auth', authRoutes);
 
-// Rutas protegidas
+// Protected routes
 app.use('/api', auth, productRoutes);
-app.use('/api', auth, saleRoutes); // Add sale routes
-app.use('/api', auth, customerRoutes); // Add customer routes
+app.use('/api', auth, saleRoutes);
+app.use('/api', auth, customerRoutes);
 app.use('/api/ventas', auth, ventasRoutes);
 
 // TODO: Add routes for inventory, sales, customers, etc.
